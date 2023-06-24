@@ -1,0 +1,16 @@
+.form-card{
+    border: 2px solid;
+    padding: 10px;
+    border-radius: 5px;
+    margin:20px
+}
+
+.jumbotron{
+    background:url("camera1.jpg");
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+    background-position: top;
+    /* height: 50vh; */
+}

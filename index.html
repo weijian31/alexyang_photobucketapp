@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Boot strap css-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+   <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+<!-- Custom css -->
+<link rel="stylesheet" href="style.css">
+
+<!-- Mapbox CDN -->
+<script src='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.js'></script>
+<link href='https://api.mapbox.com/mapbox-gl-js/v2.9.1/mapbox-gl.css' rel='stylesheet' />
+
+<!-- The core Firebase JS SDK is aleays required and must be listed first -->
+<script type="module" src='https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js'></script>
+<!-- The core Firebase JS SDK is aleays required and must be listed first -->
+<script type="module" src='https://www.gstatic.com/firebasejs/9.22.2/firebase-storage.js'></script>
+<!-- The core Firebase JS SDK is aleays required and must be listed first -->
+<script type="module" src='https://www.gstatic.com/firebasejs/9.22.2/firebase-database.js'></script>
+<!-- The core Firebase JS SDK is aleays required and must be listed first -->
+<script type="module" src='https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js'></script>
+
+<!-- manifest.json -->
+<link rel="manifest" href="manifest.json">
+
+<!-- add front -->
+<script src="https://kit.fontawesome.com/45a230f3fb.js" crossorigin="anonymous"></script>
+
+<title>Photo bucket</title>
+<style>
+  .mapboxgl-popup-content{
+    min-width: 270px
+  }
+  .mapboxgl-popup-close-button{
+    min-width: 30px;
+    min-height:30px
+  }
+</style>
+
+</head>
+<body>
+<!-- Navbar start -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <a class="navbar-brand" href="#">Mapping Our Moments</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarText">
+              <ul class="navbar-nav mr-auto">
+      <li class="nav-item active">
+        <a class="nav-link" href="#"><i class="fa-solid fa-house"></i> Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item" id='logoutBtn' style="display:none;">
+        <a class="nav-link" href="#" id="logoutUser">Logout</a>
+      </li>
+    </ul>
+    <span class="navbar-text">
+      Made by ALEX
+    </span>
+  </div>
+</nav>
+<!-- Navbar end -->
+<div id="not_logged_in">
+  <!-- Jumbotron -->
+  <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-4">
+          <!-- <div class="box1"> 
+          </div> -->
+          <div class="box2">
+            <span id ='M1' style="color:rgba(248, 251, 251, 0.829)">Mapping </span>
+            <span id ='M2' style="color:rgba(2, 4, 4, 0.829)">Our</span>
+            <span style="color:rgb(248, 251, 251, 0.829)">Moments</span>
+          </div>
+        </h1>
+        <p class="lead" style="color:rgb(246, 247, 244)">Take pictures to stop time</p>
+      </div>
+    </div>
+
+<!-- sign up sign in form start -->
+<div class="row">
+  <div class="col-lg-6 col-sm-12 col-md-12">
+    <div class="form-card">
+    <P>This is a Sign In form</P>
+    <div id='sign_in_alerts'></div>
+    <form id="sign_in_form">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="sign_in_email" aria-describedby="emailHelp" placeholder="Enter email">
+        
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="sign_in_pwd" placeholder="Password">
+      </div>
+      
+      <button type="submit" class="btn btn-primary">Sign In</button>
+    </form>
+  </div>
+  </div>
+  <div class="col-lg-6 col-sm-12 col-md-12">
+    <div class="form-card">
+    <P>This is a Sign up form</P>
+    <div id="sign_up_alerts">
+
+    </div>
+
+
+    <form id="sign_up_form">
+      <div class="form-group">
+        <label for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="sign_up_email" aria-describedby="emailHelp" placeholder="Enter email">
+        
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Password</label>
+        <input type="password" class="form-control" id="sign_up_pwd1" placeholder="Password">
+      </div>
+      <div class="form-group">
+        <label for="exampleInputPassword1">Confirm Password</label>
+        <input type="password" class="form-control" id="sign_up_pwd2" placeholder="Password again">
+      </div>
+      
+      <button type="submit" class="btn btn-success">Sign Up</button>
+    </form>
+  </div>
+  </div>
+</div>
+</div>
+<!-- sign up sign in form end -->
+<div id="logged_in" style="display: none;">
+  <div id='map' style='width: 100%; height: 90vh;'></div>
+  <button class='btn btn-success' style="border-radius:50%;position: absolute;right: 40px;bottom: 8vh" data-toggle="modal" data-target="#newentry"><i class="fa-solid fa-camera-retro"></i></button>
+
+</div>
+
+<!-- Add entry model -->
+
+    <!-- Add entry modal -->
+    <div class="modal" tabindex="-1" role="dialog" id="newentry">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Mapping the moment</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <label for="feeling">Something about this moment</label>
+            <input type="text" id="feeling" name="feeling">
+            <hr>
+            <!-- <script type="module"> import {addimgtocanvas} from "./js/feed.js" </script> -->
+            <input type="file" name="photo" id="addphotobtn" onchange="addimgtocanvas(this)" accept="image/*; capture=camera">
+            <hr>
+            <canvas id="capturedImg" width="240px" height="320px"></canvas>
+            <div id="position_info" style="padding:10px"></div>
+            <div class="progress" style="display:none">
+              <div class="progress-bar progress-bar-striped bg-success progress-bar-animated" role="progressbar" id="imgprogressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="getlocation()">Post</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+<script>
+  
+</script>
+
+
+
+<!-- Firebase Init -->
+<script type="module">
+  // Import the functions you need from the SDKs you need
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+  import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics.js";
+  // TODO: Add SDKs for Firebase products that you want to use
+  // https://firebase.google.com/docs/web/setup#available-libraries
+
+  // Your web app's Firebase configuration
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyA9Q1m9U1de_E8TElEiZUeMuQsMEbVascs",
+    authDomain: "photobuckeapp.firebaseapp.com",
+    projectId: "photobuckeapp",
+    storageBucket: "photobuckeapp.appspot.com",
+    messagingSenderId: "946216345238",
+    appId: "1:946216345238:web:564778cd274ddeb180ecb7",
+    measurementId: "G-FLV5FH9ZTP"
+  };
+
+  // Initialize Firebase
+  const app = initializeApp(firebaseConfig);
+
+</script>
+
+<!-- auth js file -->
+<script type="module" src="js/auth.js"></script>
+ <!-- Map js file -->
+<script src="js/map.js"></script>
+<!-- App js file -->
+<script src="js/app.js"></script>
+<!-- feeding js file -->
+<script src="js/feed.js"></script>
+</body>
+</html>
